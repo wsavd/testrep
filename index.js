@@ -7,7 +7,7 @@ app.use(cors());
 var multipart = require('connect-multiparty');
 var multipartMiddleware = multipart();
 
-var cloudinary = require('cloudinary');
+var cloudinary = require('cloudinary')
 
 cloudinary.config({ 
     cloud_name: 'dk2emvx3d', 
@@ -24,22 +24,40 @@ mongoose.connect(app.get('database'))
   .catch((err) => console.error(err));
 var Image = require('./models/image')
 
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
+
 const image = require('./routes/image');
 app.use('/api/v1', image)
 
 app.post('/upload', multipartMiddleware, function(req, res) {
-  //console.log(req.files.im1.path);
-  cloudinary.uploader.upload(req.files.im1.path, function(result) {
-    var image = new Image ({ image: result.url})
-    image.save()
-    .then(result => res.json(result))
-    .catch(e => next(e));
- })
+  //если от клиента не пусто
+  
+  if(req.files.im1) {
+    var path = req.files.im1;
+        //пикчу в облако
+        cloudinary.uploader.upload(path.path, function(result) {
+            var image = new Image ({ 
+              image: result.url,
+              question: req.body.question,
+              answer: req.body.answer
+            })
+            image.save()
+            .then(result => res.json(result))
+            .catch(e => next(e));
+        })
+      } else {//иначе записать данные без нее
+        var image = new Image ({ 
+          question: req.body.question,
+          answer: req.body.answer
+        })
+        image.save()
+        .then(result => res.json(result))
+        .catch(e => next(e));
+      }
 })
 
-
-
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3004;
 app.listen(port, function(){
     console.log('Server listening on:', port)
 });
