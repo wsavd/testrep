@@ -26,6 +26,7 @@ var Image = require('./models/image')
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
 const image = require('./routes/image');
 app.use('/api/v1', image)
@@ -57,7 +58,7 @@ app.post('/upload', multipartMiddleware, function(req, res) {
       }
 })
 
-const port = process.env.PORT || 3004;
+const port = process.env.PORT || 3005;
 app.listen(port, function(){
     console.log('Server listening on:', port)
 });
