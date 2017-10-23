@@ -65,10 +65,15 @@ app.get('/upload', multipartMiddleware, function(req, res) {
         .catch(e => next(e));
       }*/
 app.post('/href', multipartMiddleware, function(req, res) {
-  //var href = req.body.href;
+  var href = req.body.href;
   //request
-  console.log(req.files)
 })
+var path = require('path');
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
+app.get('/', function(req, res){
+    res.render('example');
+});
 const port = process.env.PORT || 3008;
 app.listen(port, function(){
     console.log('Server listening on:', port)
