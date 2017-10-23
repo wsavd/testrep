@@ -64,8 +64,12 @@ app.get('/upload', multipartMiddleware, function(req, res) {
         .then(result => res.json(result))
         .catch(e => next(e));
       }*/
-
-const port = process.env.PORT || 3005;
+app.post('/href', multipartMiddleware, function(req, res) {
+  //var href = req.body.href;
+  //request
+  console.log(req.files)
+})
+const port = process.env.PORT || 3008;
 app.listen(port, function(){
     console.log('Server listening on:', port)
 });
