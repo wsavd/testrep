@@ -31,9 +31,17 @@ app.use(bodyParser.urlencoded({extended: true}));
 const image = require('./routes/image');
 app.use('/api/v1', image)
 
-app.post('/upload', multipartMiddleware, function(req, res) {
+app.get('/upload', multipartMiddleware, function(req, res) {
+  Image.find({number: req.query.number}, {$exists: true}, function(err, result) {
+    if(result.length > 0) {
+      console.log("запись есть")
+    } else {
+      console.log("пишем в базу")
+    }
+  })
+})
   //если от клиента не пусто
-  
+  /*
   if(req.files.im1) {
     var path = req.files.im1;
         //пикчу в облако
@@ -55,8 +63,7 @@ app.post('/upload', multipartMiddleware, function(req, res) {
         image.save()
         .then(result => res.json(result))
         .catch(e => next(e));
-      }
-})
+      }*/
 
 const port = process.env.PORT || 3005;
 app.listen(port, function(){
